@@ -5,6 +5,7 @@
 Problem Statement :- StackIt – A Minimal Q&A Forum Platform
    
 Number of team Members :- 04
+
  Member 01
     Name :- Anuj Verma
     Email id :- anujverma3674@gmail.com
@@ -17,6 +18,6 @@ Number of team Members :- 04
     Name :- Shri om Verma
     Email id :- shriomverma10@gmail.com
 
- Member 03
+ Member 04
     Name :- Vinayak Narvare
     Email id :- vnarvare01@gmail.com
