@@ -21,3 +21,16 @@ Number of team Members :- 04
  Member 04
     Name :- Vinayak Narvare
     Email id :- vnarvare01@gmail.com
+
+
+# StackIt - Minimal Question-and-Answer Forum Platform
+
+## Overview
+StackIt is a minimal question-and-answer forum platform designed to facilitate knowledge sharing and community engagement. Users can ask questions, provide answers, and interact with each other based on their roles.
+
+## Features
+- **User Roles**: Supports multiple user roles including Guest, User, and Admin, each with different functionalities.
+- **Question Management**: Users can ask questions, view a list of questions, and see detailed views of each question along with answers.
+- **Answer Submission**: Users can submit answers to questions using a rich text editor.
+- **User Profiles**: Each user has a profile displaying their activity, including questions asked and answers posted.
+- **Authentication**: Users can register and log in to access their accounts.
