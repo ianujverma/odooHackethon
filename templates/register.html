@@ -1,0 +1,202 @@
+
+{% extends "base.html" %}
+
+{% block title %}Register - StackIt{% endblock %}
+
+{% block content %}
+<div style="display: flex; justify-content: center; align-items: center; min-height: 70vh;">
+    <div class="card" style="width: 100%; max-width: 450px; animation: slideInDown 0.6s ease-out;">
+        <div style="text-align: center; margin-bottom: 2rem;">
+            <div style="width: 80px; height: 80px; background: linear-gradient(135deg, #667eea, #764ba2); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem; animation: rotateIn 1s ease-out;">
+                <i class="fas fa-user-plus" style="color: white; font-size: 2rem;"></i>
+            </div>
+            <h2 style="color: #333; margin-bottom: 0.5rem;">Join StackIt</h2>
+            <p style="color: #666;">Create your account to start asking and answering questions</p>
+        </div>
+
+        <form method="POST" id="registerForm">
+            <div class="form-group">
+                <label for="username">
+                    <i class="fas fa-user" style="margin-right: 0.5rem; color: #667eea;"></i>
+                    Username
+                </label>
+                <input type="text" 
+                       id="username" 
+                       name="username" 
+                       class="form-control" 
+                       required 
+                       minlength="3"
+                       style="animation: slideInRight 0.6s ease-out 0.2s both;">
+            </div>
+
+            <div class="form-group">
+                <label for="email">
+                    <i class="fas fa-envelope" style="margin-right: 0.5rem; color: #667eea;"></i>
+                    Email
+                </label>
+                <input type="email" 
+                       id="email" 
+                       name="email" 
+                       class="form-control" 
+                       required 
+                       style="animation: slideInRight 0.6s ease-out 0.4s both;">
+            </div>
+
+            <div class="form-group">
+                <label for="password">
+                    <i class="fas fa-lock" style="margin-right: 0.5rem; color: #667eea;"></i>
+                    Password
+                </label>
+                <div style="position: relative;">
+                    <input type="password" 
+                           id="password" 
+                           name="password" 
+                           class="form-control" 
+                           required 
+                           minlength="6"
+                           oninput="checkPasswordStrength()"
+                           style="animation: slideInRight 0.6s ease-out 0.6s both; padding-right: 3rem;">
+                    <button type="button" 
+                            onclick="togglePassword()" 
+                            style="position: absolute; right: 1rem; top: 50%; transform: translateY(-50%); background: none; border: none; color: #667eea; cursor: pointer;">
+                        <i class="fas fa-eye" id="passwordToggle"></i>
+                    </button>
+                </div>
+                <div id="passwordStrength" style="margin-top: 0.5rem; font-size: 0.8rem;"></div>
+            </div>
+
+            <button type="submit" 
+                    class="btn btn-primary" 
+                    style="width: 100%; margin-top: 1rem; animation: bounceIn 0.6s ease-out 0.8s both;">
+                <i class="fas fa-user-plus" style="margin-right: 0.5rem;"></i>
+                Create Account
+            </button>
+        </form>
+
+        <div style="text-align: center; margin-top: 2rem; animation: fadeIn 0.6s ease-out 1s both;">
+            <p style="color: #666;">
+                Already have an account? 
+                <a href="{{ url_for('login') }}" 
+                   style="color: #667eea; text-decoration: none; font-weight: 500; transition: color 0.3s ease;">
+                    Sign in here
+                </a>
+            </p>
+        </div>
+    </div>
+</div>
+
+<style>
+@keyframes slideInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-50px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes rotateIn {
+    from {
+        opacity: 0;
+        transform: rotate(-200deg);
+    }
+    to {
+        opacity: 1;
+        transform: rotate(0);
+    }
+}
+
+@keyframes slideInRight {
+    from {
+        opacity: 0;
+        transform: translateX(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes bounceIn {
+    0% {
+        opacity: 0;
+        transform: scale(0.3);
+    }
+    50% {
+        opacity: 1;
+        transform: scale(1.05);
+    }
+    70% {
+        transform: scale(0.9);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.strength-weak { color: #ff4757; }
+.strength-medium { color: #ffa502; }
+.strength-strong { color: #2ed573; }
+</style>
+
+<script>
+function togglePassword() {
+    const passwordInput = document.getElementById('password');
+    const passwordToggle = document.getElementById('passwordToggle');
+    
+    if (passwordInput.type === 'password') {
+        passwordInput.type = 'text';
+        passwordToggle.className = 'fas fa-eye-slash';
+    } else {
+        passwordInput.type = 'password';
+        passwordToggle.className = 'fas fa-eye';
+    }
+}
+
+function checkPasswordStrength() {
+    const password = document.getElementById('password').value;
+    const strengthDiv = document.getElementById('passwordStrength');
+    
+    if (password.length === 0) {
+        strengthDiv.innerHTML = '';
+        return;
+    }
+    
+    let strength = 0;
+    let feedback = '';
+    
+    if (password.length >= 8) strength++;
+    if (/[a-z]/.test(password)) strength++;
+    if (/[A-Z]/.test(password)) strength++;
+    if (/[0-9]/.test(password)) strength++;
+    if (/[^A-Za-z0-9]/.test(password)) strength++;
+    
+    switch (strength) {
+        case 0:
+        case 1:
+        case 2:
+            feedback = '<span class="strength-weak">Weak password</span>';
+            break;
+        case 3:
+        case 4:
+            feedback = '<span class="strength-medium">Medium password</span>';
+            break;
+        case 5:
+            feedback = '<span class="strength-strong">Strong password</span>';
+            break;
+    }
+    
+    strengthDiv.innerHTML = feedback;
+}
+
+// Add form animation on submit
+document.getElementById('registerForm').addEventListener('submit', function(e) {
+    const button = this.querySelector('button[type="submit"]');
+    button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Creating account...';
+    button.disabled = true;
+});
+</script>
+{% endblock %}

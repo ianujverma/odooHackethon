@@ -1,0 +1,92 @@
+
+{% extends "base.html" %}
+
+{% block title %}StackIt - Home{% endblock %}
+
+{% block content %}
+<div class="hero-section" style="text-align: center; margin: 3rem 0; color: white;">
+    <h1 style="font-size: 3rem; margin-bottom: 1rem; animation: fadeInUp 0.8s ease-out;">Welcome to StackIt</h1>
+    <p style="font-size: 1.2rem; opacity: 0.9; animation: fadeInUp 0.8s ease-out 0.2s both;">A minimal Q&A platform for collaborative learning</p>
+</div>
+
+<div class="questions-section">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+        <h2 style="color: white; font-size: 2rem;">Recent Questions</h2>
+        {% if current_user.is_authenticated %}
+            <a href="{{ url_for('ask_question') }}" class="btn btn-primary">
+                <i class="fas fa-plus"></i> Ask Question
+            </a>
+        {% endif %}
+    </div>
+
+    {% if questions %}
+        {% for question in questions %}
+            <div class="card question-card" style="animation: fadeInUp 0.6s ease-out {{ loop.index0 * 0.1 }}s both;">
+                <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1rem;">
+                    <h3 style="margin: 0; color: #333;">
+                        <a href="{{ url_for('view_question', id=question.id) }}" 
+                           style="text-decoration: none; color: inherit; transition: color 0.3s ease;">
+                            {{ question.title }}
+                        </a>
+                    </h3>
+                    <div style="display: flex; gap: 0.5rem;">
+                        {% for tag in question.tags %}
+                            <span style="background: linear-gradient(135deg, #667eea, #764ba2); color: white; padding: 0.25rem 0.75rem; border-radius: 20px; font-size: 0.8rem;">
+                                {{ tag.name }}
+                            </span>
+                        {% endfor %}
+                    </div>
+                </div>
+                
+                <div style="color: #666; margin-bottom: 1rem; line-height: 1.6;">
+                    {{ question.content[:200] }}{% if question.content|length > 200 %}...{% endif %}
+                </div>
+                
+                <div style="display: flex; justify-content: space-between; align-items: center; font-size: 0.9rem; color: #888;">
+                    <span>
+                        <i class="fas fa-user"></i> {{ question.author.username }}
+                    </span>
+                    <span>
+                        <i class="fas fa-clock"></i> {{ question.created_at.strftime('%Y-%m-%d %H:%M') }}
+                    </span>
+                    <span>
+                        <i class="fas fa-comments"></i> {{ question.answers|length }} answers
+                    </span>
+                </div>
+            </div>
+        {% endfor %}
+    {% else %}
+        <div class="card" style="text-align: center; padding: 3rem;">
+            <i class="fas fa-question-circle" style="font-size: 4rem; color: #ddd; margin-bottom: 1rem;"></i>
+            <h3 style="color: #666; margin-bottom: 1rem;">No questions yet</h3>
+            <p style="color: #888; margin-bottom: 2rem;">Be the first to ask a question!</p>
+            {% if current_user.is_authenticated %}
+                <a href="{{ url_for('ask_question') }}" class="btn btn-primary">Ask the First Question</a>
+            {% else %}
+                <a href="{{ url_for('register') }}" class="btn btn-primary">Join StackIt</a>
+            {% endif %}
+        </div>
+    {% endif %}
+</div>
+
+<style>
+.question-card:hover h3 a {
+    color: #667eea;
+}
+
+.hero-section {
+    animation: fadeInUp 0.8s ease-out;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+</style>
+{% endblock %}

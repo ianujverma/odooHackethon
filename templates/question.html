@@ -1,0 +1,257 @@
+
+{% extends "base.html" %}
+
+{% block title %}{{ question.title }} - StackIt{% endblock %}
+
+{% block content %}
+<div class="card" style="animation: fadeInUp 0.6s ease-out;">
+    <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1rem;">
+        <h1 style="color: #333; margin: 0; flex: 1;">{{ question.title }}</h1>
+        <div style="display: flex; gap: 0.5rem; margin-left: 1rem;">
+            {% for tag in question.tags %}
+                <span style="background: linear-gradient(135deg, #667eea, #764ba2); color: white; padding: 0.25rem 0.75rem; border-radius: 20px; font-size: 0.8rem; white-space: nowrap;">
+                    {{ tag.name }}
+                </span>
+            {% endfor %}
+        </div>
+    </div>
+    
+    <div style="color: #666; margin-bottom: 1rem; line-height: 1.6;">
+        {{ question.content|safe }}
+    </div>
+    
+    <div style="display: flex; justify-content: space-between; align-items: center; font-size: 0.9rem; color: #888; padding-top: 1rem; border-top: 1px solid #eee;">
+        <span>
+            <i class="fas fa-user"></i> Asked by {{ question.author.username }}
+        </span>
+        <span>
+            <i class="fas fa-clock"></i> {{ question.created_at.strftime('%Y-%m-%d %H:%M') }}
+        </span>
+    </div>
+</div>
+
+<div style="margin: 2rem 0;">
+    <h3 style="color: white; margin-bottom: 1rem;">
+        {{ answers|length }} Answer{{ 's' if answers|length != 1 else '' }}
+    </h3>
+    
+    {% if answers %}
+        {% for answer in answers %}
+            <div class="card answer-card" style="animation: slideInUp 0.6s ease-out {{ loop.index0 * 0.1 }}s both; {% if answer.is_accepted %}border-left: 4px solid #2ed573;{% endif %}">
+                {% if answer.is_accepted %}
+                    <div style="background: #2ed573; color: white; padding: 0.5rem 1rem; margin: -2rem -2rem 1rem -2rem; border-radius: 12px 12px 0 0;">
+                        <i class="fas fa-check-circle"></i> Accepted Answer
+                    </div>
+                {% endif %}
+                
+                <div style="display: flex; gap: 1rem;">
+                    <div style="display: flex; flex-direction: column; align-items: center; gap: 0.5rem; min-width: 60px;">
+                        {% if current_user.is_authenticated %}
+                            <a href="{{ url_for('vote_answer', answer_id=answer.id, vote_type='up') }}" 
+                               class="vote-btn vote-up" 
+                               style="text-decoration: none; color: #667eea; font-size: 1.5rem; transition: all 0.3s ease;">
+                                <i class="fas fa-chevron-up"></i>
+                            </a>
+                        {% endif %}
+                        
+                        <span style="font-size: 1.2rem; font-weight: 600; color: {% if answer.votes > 0 %}#2ed573{% elif answer.votes < 0 %}#ff4757{% else %}#666{% endif %};">
+                            {{ answer.votes }}
+                        </span>
+                        
+                        {% if current_user.is_authenticated %}
+                            <a href="{{ url_for('vote_answer', answer_id=answer.id, vote_type='down') }}" 
+                               class="vote-btn vote-down" 
+                               style="text-decoration: none; color: #667eea; font-size: 1.5rem; transition: all 0.3s ease;">
+                                <i class="fas fa-chevron-down"></i>
+                            </a>
+                        {% endif %}
+                        
+                        {% if current_user.is_authenticated and current_user == question.author and not answer.is_accepted %}
+                            <a href="{{ url_for('accept_answer', answer_id=answer.id) }}" 
+                               class="accept-btn" 
+                               style="text-decoration: none; color: #2ed573; font-size: 1.2rem; margin-top: 0.5rem; transition: all 0.3s ease;"
+                               title="Accept this answer">
+                                <i class="fas fa-check"></i>
+                            </a>
+                        {% endif %}
+                    </div>
+                    
+                    <div style="flex: 1;">
+                        <div style="color: #333; margin-bottom: 1rem; line-height: 1.6;">
+                            {{ answer.content|safe }}
+                        </div>
+                        
+                        <div style="display: flex; justify-content: space-between; align-items: center; font-size: 0.9rem; color: #888;">
+                            <span>
+                                <i class="fas fa-user"></i> {{ answer.author.username }}
+                            </span>
+                            <span>
+                                <i class="fas fa-clock"></i> {{ answer.created_at.strftime('%Y-%m-%d %H:%M') }}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    {% else %}
+        <div class="card" style="text-align: center; padding: 3rem; animation: fadeIn 0.6s ease-out 0.3s both;">
+            <i class="fas fa-lightbulb" style="font-size: 3rem; color: #ddd; margin-bottom: 1rem;"></i>
+            <h4 style="color: #666; margin-bottom: 0.5rem;">No answers yet</h4>
+            <p style="color: #888;">Be the first to answer this question!</p>
+        </div>
+    {% endif %}
+</div>
+
+{% if current_user.is_authenticated %}
+    <div class="card" style="animation: slideInUp 0.6s ease-out 0.5s both;">
+        <h4 style="color: #333; margin-bottom: 1rem;">
+            <i class="fas fa-reply" style="color: #667eea; margin-right: 0.5rem;"></i>
+            Your Answer
+        </h4>
+        
+        <form method="POST" action="{{ url_for('submit_answer', question_id=question.id) }}" id="answerForm">
+            <div class="form-group">
+                <!-- Rich Text Editor Toolbar -->
+                <div class="editor-toolbar" style="border: 2px solid #e9ecef; border-bottom: 1px solid #e9ecef; border-radius: 8px 8px 0 0; padding: 0.5rem; background: #f8f9fa;">
+                    <button type="button" onclick="formatText('bold')" class="editor-btn">
+                        <i class="fas fa-bold"></i>
+                    </button>
+                    <button type="button" onclick="formatText('italic')" class="editor-btn">
+                        <i class="fas fa-italic"></i>
+                    </button>
+                    <button type="button" onclick="formatText('strikethrough')" class="editor-btn">
+                        <i class="fas fa-strikethrough"></i>
+                    </button>
+                    <span style="margin: 0 0.5rem; color: #ccc;">|</span>
+                    <button type="button" onclick="formatText('insertOrderedList')" class="editor-btn">
+                        <i class="fas fa-list-ol"></i>
+                    </button>
+                    <button type="button" onclick="formatText('insertUnorderedList')" class="editor-btn">
+                        <i class="fas fa-list-ul"></i>
+                    </button>
+                    <span style="margin: 0 0.5rem; color: #ccc;">|</span>
+                    <button type="button" onclick="insertLink()" class="editor-btn">
+                        <i class="fas fa-link"></i>
+                    </button>
+                    <button type="button" onclick="insertEmoji()" class="editor-btn">
+                        <i class="fas fa-smile"></i>
+                    </button>
+                </div>
+                
+                <div id="answerEditor" 
+                     contenteditable="true" 
+                     style="min-height: 150px; border: 2px solid #e9ecef; border-top: none; border-radius: 0 0 8px 8px; padding: 1rem; background: white; outline: none;"
+                     placeholder="Write your answer here..."></div>
+                
+                <textarea id="answerContent" name="content" style="display: none;" required></textarea>
+            </div>
+            
+            <button type="submit" class="btn btn-primary">
+                <i class="fas fa-paper-plane" style="margin-right: 0.5rem;"></i>
+                Post Your Answer
+            </button>
+        </form>
+    </div>
+{% else %}
+    <div class="card" style="text-align: center; padding: 2rem; animation: fadeIn 0.6s ease-out 0.7s both;">
+        <h4 style="color: #666; margin-bottom: 1rem;">Want to answer this question?</h4>
+        <p style="color: #888; margin-bottom: 1rem;">Sign in to post your answer</p>
+        <a href="{{ url_for('login') }}" class="btn btn-primary">Sign In</a>
+    </div>
+{% endif %}
+
+<style>
+.vote-btn:hover {
+    transform: scale(1.2);
+    color: #764ba2 !important;
+}
+
+.accept-btn:hover {
+    transform: scale(1.2);
+    color: #27ae60 !important;
+}
+
+.answer-card {
+    transition: all 0.3s ease;
+}
+
+.answer-card:hover {
+    transform: translateX(5px);
+}
+
+.editor-btn {
+    background: none;
+    border: 1px solid #ddd;
+    padding: 0.5rem;
+    margin: 0 0.1rem;
+    border-radius: 4px;
+    cursor: pointer;
+    color: #667eea;
+    transition: all 0.3s ease;
+}
+
+.editor-btn:hover {
+    background: #667eea;
+    color: white;
+}
+
+#answerEditor:focus {
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+#answerEditor:empty:before {
+    content: attr(placeholder);
+    color: #999;
+    font-style: italic;
+}
+
+@keyframes slideInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+</style>
+
+<script>
+// Rich text editor functions
+function formatText(command) {
+    document.execCommand(command, false, null);
+    document.getElementById('answerEditor').focus();
+}
+
+function insertLink() {
+    const url = prompt('Enter URL:');
+    if (url) {
+        document.execCommand('createLink', false, url);
+    }
+}
+
+function insertEmoji() {
+    const emojis = ['😀', '😃', '😄', '😁', '😆', '😅', '😂', '🤣', '😊', '😇', '🙂', '🙃', '😉', '😌', '😍', '🥰', '😘', '😗', '😙', '😚', '😋', '😛', '😝', '😜', '🤪', '🤨', '🧐', '🤓', '😎', '🤩', '🥳'];
+    const emoji = emojis[Math.floor(Math.random() * emojis.length)];
+    document.execCommand('insertText', false, emoji);
+}
+
+// Form submission
+document.getElementById('answerForm')?.addEventListener('submit', function(e) {
+    const editorContent = document.getElementById('answerEditor').innerHTML;
+    document.getElementById('answerContent').value = editorContent;
+    
+    if (editorContent.trim() === '') {
+        e.preventDefault();
+        alert('Please write your answer before submitting.');
+        return;
+    }
+    
+    const button = this.querySelector('button[type="submit"]');
+    button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Posting answer...';
+    button.disabled = true;
+});
+</script>
+{% endblock %}

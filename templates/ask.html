@@ -1,0 +1,319 @@
+
+{% extends "base.html" %}
+
+{% block title %}Ask Question - StackIt{% endblock %}
+
+{% block content %}
+<div class="card" style="animation: fadeInUp 0.6s ease-out;">
+    <h2 style="color: #333; margin-bottom: 2rem; text-align: center;">
+        <i class="fas fa-question-circle" style="color: #667eea; margin-right: 0.5rem;"></i>
+        Ask a Question
+    </h2>
+
+    <form method="POST" id="questionForm">
+        <div class="form-group">
+            <label for="title">
+                <i class="fas fa-heading" style="margin-right: 0.5rem; color: #667eea;"></i>
+                Question Title
+            </label>
+            <input type="text" 
+                   id="title" 
+                   name="title" 
+                   class="form-control" 
+                   placeholder="Be specific and imagine you're asking a question to another person"
+                   required 
+                   maxlength="200"
+                   style="animation: slideInLeft 0.6s ease-out 0.2s both;">
+            <small style="color: #666;">Keep it short and descriptive</small>
+        </div>
+
+        <div class="form-group">
+            <label for="content">
+                <i class="fas fa-edit" style="margin-right: 0.5rem; color: #667eea;"></i>
+                Description
+            </label>
+            
+            <!-- Rich Text Editor Toolbar -->
+            <div class="editor-toolbar" style="border: 2px solid #e9ecef; border-bottom: 1px solid #e9ecef; border-radius: 8px 8px 0 0; padding: 0.5rem; background: #f8f9fa; animation: slideInRight 0.6s ease-out 0.4s both;">
+                <button type="button" onclick="formatText('bold')" class="editor-btn">
+                    <i class="fas fa-bold"></i>
+                </button>
+                <button type="button" onclick="formatText('italic')" class="editor-btn">
+                    <i class="fas fa-italic"></i>
+                </button>
+                <button type="button" onclick="formatText('strikethrough')" class="editor-btn">
+                    <i class="fas fa-strikethrough"></i>
+                </button>
+                <span style="margin: 0 0.5rem; color: #ccc;">|</span>
+                <button type="button" onclick="formatText('insertOrderedList')" class="editor-btn">
+                    <i class="fas fa-list-ol"></i>
+                </button>
+                <button type="button" onclick="formatText('insertUnorderedList')" class="editor-btn">
+                    <i class="fas fa-list-ul"></i>
+                </button>
+                <span style="margin: 0 0.5rem; color: #ccc;">|</span>
+                <button type="button" onclick="formatText('justifyLeft')" class="editor-btn">
+                    <i class="fas fa-align-left"></i>
+                </button>
+                <button type="button" onclick="formatText('justifyCenter')" class="editor-btn">
+                    <i class="fas fa-align-center"></i>
+                </button>
+                <button type="button" onclick="formatText('justifyRight')" class="editor-btn">
+                    <i class="fas fa-align-right"></i>
+                </button>
+                <span style="margin: 0 0.5rem; color: #ccc;">|</span>
+                <button type="button" onclick="insertLink()" class="editor-btn">
+                    <i class="fas fa-link"></i>
+                </button>
+                <button type="button" onclick="insertEmoji()" class="editor-btn">
+                    <i class="fas fa-smile"></i>
+                </button>
+            </div>
+            
+            <div id="editor" 
+                 contenteditable="true" 
+                 style="min-height: 200px; border: 2px solid #e9ecef; border-top: none; border-radius: 0 0 8px 8px; padding: 1rem; background: white; outline: none; animation: slideInRight 0.6s ease-out 0.6s both;"
+                 placeholder="Provide all the details. What did you try? What were you expecting?"></div>
+            
+            <textarea id="content" name="content" style="display: none;"></textarea>
+        </div>
+
+        <div class="form-group">
+            <label for="tags">
+                <i class="fas fa-tags" style="margin-right: 0.5rem; color: #667eea;"></i>
+                Tags
+            </label>
+            <div id="tagContainer" style="animation: slideInUp 0.6s ease-out 0.8s both;">
+                <input type="text" 
+                       id="tagInput" 
+                       placeholder="Add tags (press Enter or comma to add)"
+                       style="width: 100%; padding: 0.75rem; border: 2px solid #e9ecef; border-radius: 8px; margin-bottom: 0.5rem;">
+                <div id="tagList" style="display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.5rem;"></div>
+            </div>
+            <small style="color: #666;">Add up to 5 tags to describe what your question is about</small>
+        </div>
+
+        <button type="submit" 
+                class="btn btn-primary" 
+                style="width: 100%; margin-top: 1rem; animation: bounceIn 0.6s ease-out 1s both;">
+            <i class="fas fa-paper-plane" style="margin-right: 0.5rem;"></i>
+            Post Your Question
+        </button>
+    </form>
+</div>
+
+<style>
+.editor-btn {
+    background: none;
+    border: 1px solid #ddd;
+    padding: 0.5rem;
+    margin: 0 0.1rem;
+    border-radius: 4px;
+    cursor: pointer;
+    color: #667eea;
+    transition: all 0.3s ease;
+}
+
+.editor-btn:hover {
+    background: #667eea;
+    color: white;
+}
+
+.editor-btn.active {
+    background: #667eea;
+    color: white;
+}
+
+#editor:focus {
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+#editor:empty:before {
+    content: attr(placeholder);
+    color: #999;
+    font-style: italic;
+}
+
+.tag-item {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    animation: fadeInScale 0.3s ease-out;
+}
+
+.tag-remove {
+    background: rgba(255, 255, 255, 0.3);
+    border: none;
+    color: white;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.8rem;
+}
+
+@keyframes fadeInScale {
+    from {
+        opacity: 0;
+        transform: scale(0.8);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@keyframes slideInLeft {
+    from {
+        opacity: 0;
+        transform: translateX(-30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes slideInRight {
+    from {
+        opacity: 0;
+        transform: translateX(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes slideInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes bounceIn {
+    0% {
+        opacity: 0;
+        transform: scale(0.3);
+    }
+    50% {
+        opacity: 1;
+        transform: scale(1.05);
+    }
+    70% {
+        transform: scale(0.9);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+</style>
+
+<script>
+let tags = [];
+
+// Rich text editor functions
+function formatText(command) {
+    document.execCommand(command, false, null);
+    document.getElementById('editor').focus();
+}
+
+function insertLink() {
+    const url = prompt('Enter URL:');
+    if (url) {
+        document.execCommand('createLink', false, url);
+    }
+}
+
+function insertEmoji() {
+    const emojis = ['😀', '😃', '😄', '😁', '😆', '😅', '😂', '🤣', '😊', '😇', '🙂', '🙃', '😉', '😌', '😍', '🥰', '😘', '😗', '😙', '😚', '😋', '😛', '😝', '😜', '🤪', '🤨', '🧐', '🤓', '😎', '🤩', '🥳', '😏', '😒', '😞', '😔', '😟', '😕', '🙁', '☹️', '😣', '😖', '😫', '😩', '🥺', '😢', '😭', '😤', '😠', '😡', '🤬', '🤯', '😳', '🥵', '🥶', '😱', '😨', '😰', '😥', '😓', '🤗', '🤔', '🤭', '🤫', '🤥', '😶', '😐', '😑', '😬', '🙄', '😯', '😦', '😧', '😮', '😲', '🥱', '😴', '🤤', '😪', '😵', '🤐', '🥴', '🤢', '🤮', '🤧', '😷', '🤒', '🤕'];
+    const emoji = emojis[Math.floor(Math.random() * emojis.length)];
+    document.execCommand('insertText', false, emoji);
+}
+
+// Tag management
+document.getElementById('tagInput').addEventListener('keydown', function(e) {
+    if (e.key === 'Enter' || e.key === ',') {
+        e.preventDefault();
+        addTag();
+    }
+});
+
+document.getElementById('tagInput').addEventListener('blur', addTag);
+
+function addTag() {
+    const input = document.getElementById('tagInput');
+    const tagName = input.value.trim().toLowerCase();
+    
+    if (tagName && !tags.includes(tagName) && tags.length < 5) {
+        tags.push(tagName);
+        renderTags();
+        input.value = '';
+    }
+}
+
+function removeTag(tagName) {
+    tags = tags.filter(tag => tag !== tagName);
+    renderTags();
+}
+
+function renderTags() {
+    const tagList = document.getElementById('tagList');
+    tagList.innerHTML = tags.map(tag => 
+        `<div class="tag-item">
+            ${tag}
+            <button type="button" class="tag-remove" onclick="removeTag('${tag}')">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>`
+    ).join('');
+}
+
+// Form submission
+document.getElementById('questionForm').addEventListener('submit', function(e) {
+    const editorContent = document.getElementById('editor').innerHTML;
+    document.getElementById('content').value = editorContent;
+    
+    // Add tags as hidden inputs
+    tags.forEach(tag => {
+        const input = document.createElement('input');
+        input.type = 'hidden';
+        input.name = 'tags';
+        input.value = tag;
+        this.appendChild(input);
+    });
+    
+    const button = this.querySelector('button[type="submit"]');
+    button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Posting question...';
+    button.disabled = true;
+});
+
+// Editor placeholder management
+document.getElementById('editor').addEventListener('focus', function() {
+    if (this.innerHTML.trim() === '') {
+        this.innerHTML = '';
+    }
+});
+
+document.getElementById('editor').addEventListener('blur', function() {
+    if (this.innerHTML.trim() === '') {
+        this.innerHTML = '';
+    }
+});
+</script>
+{% endblock %}
