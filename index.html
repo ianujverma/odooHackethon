@@ -23,7 +23,7 @@
     <main class="main">
       <header>
         <h2>Welcome !</h2>
-        <button class="ask-btn" onclick="toggleForm()">+ Ask Question</button>
+        <a href="ask.html" class="ask-btn">+ Ask Question</a>
       </header>
 
       <section id="ask-form" class="ask-form" style="display:none;">
@@ -49,3 +49,15 @@
   </div>
 </body>
 </html>
+
+<div class="notification-wrapper">
+  <button onclick="toggleNotifications()">🔔 <span id="notif-count">3</span></button>
+  <div id="notif-panel" class="dropdown" style="display: none;">
+    <p><strong>Notifications</strong></p>
+    <ul id="notif-list">
+      <li>@Priyanshu replied to your question</li>
+      <li>@ShriOm mentioned you in a comment</li>
+      <li>Your answer was accepted ✅</li>
+    </ul>
+  </div>
+</div>

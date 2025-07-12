@@ -35,3 +35,8 @@ function toggleForm() {
       const data = await res.json();
       alert(data.message || data.error);
     }
+
+    function toggleNotifications() {
+  const panel = document.getElementById('notif-panel');
+  panel.style.display = panel.style.display === 'none' ? 'block' : 'none';
+}
