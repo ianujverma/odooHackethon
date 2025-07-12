@@ -1,8 +1,5 @@
-
 {% extends "base.html" %}
-
 {% block title %}StackIt - Home{% endblock %}
-
 {% block content %}
 <div class="hero-section" style="text-align: center; margin: 3rem 0; color: white;">
     <h1 style="font-size: 3rem; margin-bottom: 1rem; animation: fadeInUp 0.8s ease-out;">Welcome to StackIt</h1>
@@ -21,7 +18,7 @@
 
     {% if questions %}
         {% for question in questions %}
-            <div class="card question-card" style="animation: fadeInUp 0.6s ease-out {{ loop.index0 * 0.1 }}s both;">
+            <div class="card question-card" style="animation: fadeInUp 0.6s ease-out {{ (loop.index0 * 0.1)|round(1) }}s both;">
                 <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1rem;">
                     <h3 style="margin: 0; color: #333;">
                         <a href="{{ url_for('view_question', id=question.id) }}" 
