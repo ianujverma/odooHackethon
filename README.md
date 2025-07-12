@@ -22,7 +22,7 @@ StackIt is a sleek and responsive question-and-answer forum designed to support 
 
 ## 🌐 Live Demo
 
-GitHub Pages: [Visit Site](https://github.com/ianujverma/odooHackethon.git)  
+GitHub Pages: [Visit Site](https://6c7dd08b-ae0a-415e-bee3-a388a0a1ff11-00-3etj5izhardfn.sisko.replit.dev/)  
 
 ## 🛠️ Tech Stack
 
