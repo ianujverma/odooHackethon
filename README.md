@@ -23,7 +23,6 @@ StackIt is a sleek and responsive question-and-answer forum designed to support 
 ## 🌐 Live Demo
 
 GitHub Pages: [Visit Site](https://ianujverma.github.io/odooHackethon)  
-_(Make sure `index.html` is in the root directory)_
 
 ## 🛠️ Tech Stack
 
