@@ -1,36 +1,48 @@
-# odooHackethon
-   
-# Team Name :- Team 4077
-    
-Problem Statement :- StackIt – A Minimal Q&A Forum Platform
-   
-Number of team Members :- 04
+# StackIt – A Minimal Q&A Forum Platform
 
- Member 01
-    Name :- Anuj Verma
-    Email id :- anujverma3674@gmail.com
+StackIt is a sleek and responsive question-and-answer forum designed to support collaborative learning, structured knowledge sharing, and role-based engagement.
 
- Member 02
-    Name :- Priyanshu Sharma
-    Email id :- Priyanshusharma12116@gmail.com
+## 🚀 Features
 
- Member 03
-    Name :- Shri om Verma
-    Email id :- shriomverma10@gmail.com
+- **User Roles**: Guest, User, Admin
+- **Ask & Answer**: Rich text editor, tag-based filtering, answer acceptance
+- **Authentication**: JWT-based login and registration
+- **Voting System**: Upvote/downvote answers, accept solutions
+- **Notifications**: Real-time alerts for mentions, answers, comments
+- **Search & Filter**: Tag-based search and keyword matching
+- **Markdown Support**: Description and answers rendered from Markdown
+- **Admin Panel**: Moderate content based on role permissions
 
- Member 04
-    Name :- Vinayak Narvare
-    Email id :- vnarvare01@gmail.com
+## 🧑‍🤝‍🧑 Team 4077
 
+- **Anuj Verma** – anujverma3674@gmail.com  
+- **Priyanshu Sharma** – priyanshusharma12116@gmail.com  
+- **Shri Om Verma** – shriomverma10@gmail.com  
+- **Vinayak Narvare** – vnarvare01@gmail.com  
 
-# StackIt - Minimal Question-and-Answer Forum Platform
+## 🌐 Live Demo
 
-## Overview
-StackIt is a minimal question-and-answer forum platform designed to facilitate knowledge sharing and community engagement. Users can ask questions, provide answers, and interact with each other based on their roles.
+GitHub Pages: [Visit Site](https://ianujverma.github.io/odooHackethon)  
+_(Make sure `index.html` is in the root directory)_
 
-## Features
-- **User Roles**: Supports multiple user roles including Guest, User, and Admin, each with different functionalities.
-- **Question Management**: Users can ask questions, view a list of questions, and see detailed views of each question along with answers.
-- **Answer Submission**: Users can submit answers to questions using a rich text editor.
-- **User Profiles**: Each user has a profile displaying their activity, including questions asked and answers posted.
-- **Authentication**: Users can register and log in to access their accounts.
+## 🛠️ Tech Stack
+
+- **Frontend**: HTML, CSS, JavaScript  
+- **Backend**: Node.js, Express, MongoDB  
+- **Auth**: JWT  
+- **Hosting**: GitHub Pages (frontend), Render (backend)
+
+## 📁 Project Structure
+
+- `/frontend` – Static frontend files  
+- `/backend` – API and server logic  
+- `README.md` – Project documentation
+
+---
+
+If you’d like, I can help you add:
+- 🔖 Screenshots or GIFs of your app in action  
+- 📦 Deployment setup files like `vercel.json` or `Procfile`  
+- 🧪 Postman collection or API guide for contributors  
+
+Just say the word and I’ll scaffold the next enhancement!
